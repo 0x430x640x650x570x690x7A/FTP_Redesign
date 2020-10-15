@@ -22,9 +22,9 @@ while True:
     try:    
         #read messagetype
         controlMessage = connectionSocket.recv(1024)
-        #message: nameOfFile: location: newFileName:
+        #message nameOfFile location newFileName
         #parsedControlMessage[0] parsedControlMessage[1] parsedControlMessage[2] parsedControlMessage[3]
-        parsedControlMessage = controlMessage.split(': ')
+        parsedControlMessage = controlMessage.split(' ')
         
         """
         switch(parsedControlMessage[0])
