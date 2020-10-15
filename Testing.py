@@ -6,9 +6,9 @@ Created on Thu Oct 15 17:17:25 2020
 """
 
     
-message = 'delete: myFileName: myLocation: newFIleName'
+message = 'delete myFileName myLocation newFIleName'
 
-newMessage = message.split(': ')
+newMessage = message.split(' ')
 
 print(newMessage)
 print(newMessage[0])
