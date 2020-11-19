@@ -26,3 +26,7 @@ print(os.listdir("/home/mininet/mininet/custom"))
 print("removing testfile")
 os.remove("/home/mininet/mininet/testfile.txt")
 print(os.listdir(path))
+
+# alternate to shutil.copyfile
+
+os.popen("cp /home/mininet/mininet/testf.txt /home/mininet/mininet/test2.txt")
