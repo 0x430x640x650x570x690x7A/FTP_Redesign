@@ -28,37 +28,32 @@ print("rename nameOfFile path newFileName ")
 print("delete nameOfFile path ")
 
 while True:
+    message = ""
     try:
         message = input("Enter Command: ")
         if message == 'exit':
             break
         
-        outputData = message.split(' ')
-        print(outputData)
-        
-        if outputData[0] == 'send' or outputData[0] == 'copy' or outputData[0] == 'rename' or outputData[0] == 'delete':
-                
-            for i in range(0, len(outputData)):                         
-                serverSocket.send((outputData[i] + ' ').encode()) 
-            #serverSocket.close()
-            #serverSocket.sendall(b"Test") #
-            #serverSocket.sendall(outputData[0].encode())
-            print("Command Sent")
-            data = serverSocket.recv(1024)
-            print('Received', repr(data))
+        if 'send' in message or 'copy' in message or 'rename' in message  or 'delete' in message :
+            print(message)
+            serverSocket.sendall(message.encode())
             
-            #if outputData[0] == 'send' :
-             #   serverSocket.sendall(file)
+            print("Command Sent")
+            #data = serverSocket.recv(1024)
+            #print('Received', repr(data))
         else:
             print("600 Invalid Option")
             
     except:
         print("601 Error")
+        serverSocket.close()
         
 serverSocket.close()
         
 """
 client error codes
+
+500 Valid client send
 
 600 Invalid Option
 601 Client Side General Error
