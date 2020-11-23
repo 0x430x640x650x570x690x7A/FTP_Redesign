@@ -1,64 +1,115 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Nov 15 18:53:56 2020
+Created on Sun Nov 15 20:16:41 2020
 
 @author: evans
 
-Socket example: https://realpython.com/python-sockets/
+operation nameOfFile newFileName
 """
 
 from socket import *
+import os
 serverSocket = socket(AF_INET, SOCK_STREAM) 
-#Prepare a sever socket 
-#Fill in start
-serverIP = '10.0.0.1' 
+serverIp = "10.0.0.1"
 serverPort = 80
-serverSocket.connect((serverIP,serverPort))
-print('Connecting to ', serverPort)
-message = ""
-outputData = ""
-file = "You have created a file"
+serverSocket.bind((serverIp,serverPort))
+serverSocket.listen(1)
+print('Server up on port', serverPort)
+connectionSocket, addr = serverSocket.accept()     
+print('Connected by', addr)
+myPath = "/home/mininet/mininet/custom/serverFolder/"
 
-print("\tCommand Options ")
-print("send copy rename delete")
-print("\tCommand Rules")
-print("send fileDirectory ")
-print("copy nameOfFile newFileName ")
-print("rename nameOfFile newFileName ")
-print("delete nameOfFile ")
+def send():
+    #print('host side send') 
+    path = "/home/mininet/mininet/"
+    print("File directory list for " + path + inputData[1])
+    directoryList = os.listdir(path + inputData[1]);
+    #print(directoryList)
+    temp = ''
+    for i in range(0, len(directoryList)):
+        temp += (directoryList[i] + "\n")                         
+    connectionSocket.sendall(temp.encode()) 
+    
+def copy():
+    #print('host side copy')
+    print("Copied " + inputData[1] + " as " + inputData[2])
+    oldPath = myPath + inputData[1]
+    newPath = myPath + inputData[2] 
+    os.popen("cp " + oldPath + " " + newPath)
+    
+def rename():
+    #print('host side rename')
+    print("Renamed " + inputData[1] + " to " + inputData[2]) 
+    oldPath = myPath + inputData[1]
+    newPath = myPath + inputData[2] 
+    #print(oldPath)  
+    #print(newPath)
+    os.rename(oldPath, newPath)
+    
+def delete():
+    #print('host side delete')
+    print("Deleted " + inputData[1])
+    oldPath = myPath + inputData[1]
+    #print(oldPath)  
+    #print(newPath)
+    os.remove(oldPath)
 
-while True:
-    message = ""
-    try:
-        message = input("Enter Command: ")
-        if message == 'exit':
-            break
-        
-        if 'send' in message or 'copy' in message or 'rename' in message  or 'delete' in message :
-            #print(message)
-            serverSocket.sendall(message.encode())
-            print("Command sent to server")
-            if 'send' in message:
-                print("Received directory list: ")
-                data = serverSocket.recv(1024)
-                tempString = data.decode()
-                print(tempString)
+while True: 
+    message = "" 
+    try:         
+        message = connectionSocket.recv(1024)
+        #print(message)
+        tempString = message.decode()
+        inputData = tempString.split(' ')
+        #print(inputData)
+        #print(inputData[0])
 
+        if inputData[0] == 'send' :
+             send()
+        elif inputData[0] == 'copy' :
+             copy()
+        elif inputData[0] == 'rename' :
+             rename()
+        elif inputData[0] == 'delete':
+             delete()
+        elif inputData[0] == 'exit':
+            print("Exiting")
         else:
-            print("600 Invalid Option")
-            
-    except:
-        print("601 Error")
-        serverSocket.close()
+             print("700 Error")
+
+        if not message:
+            serverSocket.close()
+            break
+        #connectionSocket.sendall(message)
         
+    except IOError:
+        print("701 Error")
+        print("Verify input")
+        #serverSocket.close()        
+    except FileNotFoundError:
+        print("702 Error")
+        print("Verify input")
+        #serverSocket.close()        
+    except OSError:
+        print("703 Error")
+        print("Closing connection")
+        break
+    except:
+        print("704 Error")
+        #print("Closing connection")
+        #break
+    
+print("Connection closed")
 serverSocket.close()
         
+ 
 """
-client error codes
+server error codes
 
-
-600 Invalid Option
-601 Client Side General Error
-602 client side port error
+700 invalid option
+701 IOError
+702 FileNotFoundError
+703 OSError
+704 general error
 
 """
