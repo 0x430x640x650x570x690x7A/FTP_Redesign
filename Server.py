@@ -20,16 +20,16 @@ print('Connected by', addr)
 myPath = ""
 
 def send():
-    """
     #print('host side send') 
-    print("File directory list for " + inputData[1])
-    directoryList = os.listdir(myPath + inputData[1]);
+    path = "/home/mininet/mininet/"
+    print("File directory list for " + path + inputData[1])
+    directoryList = os.listdir(path + inputData[1]);
     print(directoryList)
     temp = ''
     for i in range(0, len(directoryList)):
-        temp += (directorList[i] + '\n')                         
+        temp += (directoryList[i] + "\n")                         
     connectionSocket.sendall(temp.encode()) 
-    """
+    
 def copy():
     #print('host side copy')
     print("Copied " + inputData[1] + " as " + inputData[2])
@@ -73,13 +73,15 @@ while True:
              rename()
         elif inputData[0] == 'delete':
              delete()
+        elif inputData[0] == 'exit':
+            print("Exiting")
         else:
              print("700 Error")
 
         if not message:
             serverSocket.close()
             break
-        connectionSocket.sendall(message)
+        #connectionSocket.sendall(message)
         
     except IOError:
         print("701 Error")
