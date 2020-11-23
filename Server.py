@@ -3,9 +3,12 @@
 Created on Sun Nov 15 20:16:41 2020
 
 @author: evans
+
+operation nameOfFile newFileName
 """
 
 from socket import *
+import os
 serverSocket = socket(AF_INET, SOCK_STREAM) 
 serverIp = "10.0.0.1"
 serverPort = 80
@@ -14,30 +17,53 @@ serverSocket.listen(1)
 print('Server up on port', serverPort)
 connectionSocket, addr = serverSocket.accept()     
 print('Connected by', addr)
+myPath = ""
 
 def send():
-    print('host side send') 
-    #open and close new socket
-    
+    """
+    #print('host side send') 
+    print("File directory list for " + inputData[1])
+    directoryList = os.listdir(myPath + inputData[1]);
+    print(directoryList)
+    temp = ''
+    for i in range(0, len(directoryList)):
+        temp += (directorList[i] + '\n')                         
+    connectionSocket.sendall(temp.encode()) 
+    """
 def copy():
-    print('host side copy')
+    #print('host side copy')
+    print("Copied " + inputData[1] + " as " + inputData[2])
+    oldPath = myPath + inputData[1]
+    newPath = myPath + inputData[2] 
+    os.popen("cp " + oldPath + " " + newPath)
     
 def rename():
-    print('host side rename')
+    #print('host side rename')
+    print("Renamed " + inputData[1] + " to " + inputData[2]) 
+    oldPath = myPath + inputData[1]
+    newPath = myPath + inputData[2] 
+    #print(oldPath)  
+    #print(newPath)
+    os.rename(oldPath, newPath)
     
 def delete():
-    print('host side delete')
-
+    #print('host side delete')
+    print("Deleted " + inputData[1])
+    oldPath = myPath + inputData[1]
+    #print(oldPath)  
+    #print(newPath)
+    os.remove(oldPath)
 
 while True: 
-    message = ""      
+    message = "" 
+    myPath = "/home/mininet/mininet/custom/serverFolder/"
     try:         
         message = connectionSocket.recv(1024)
-        print(message)
+        #print(message)
         tempString = message.decode()
         inputData = tempString.split(' ')
-        print(inputData)
-        print(inputData[0])
+        #print(inputData)
+        #print(inputData[0])
 
         if inputData[0] == 'send' :
              send()
@@ -51,31 +77,33 @@ while True:
              print("700 Error")
 
         if not message:
+            serverSocket.close()
             break
         connectionSocket.sendall(message)
         
     except IOError:
         print("701 Error")
-        serverSocket.close()        
+        print("Verify input")
+        #serverSocket.close()        
     except FileNotFoundError:
         print("702 Error")
-        serverSocket.close()        
+        print("Verify input")
+        #serverSocket.close()        
     except OSError:
         print("703 Error")
+        print("Closing connection")
         break
-        serverSocket.close()        
     except:
         print("704 Error")
+        print("Closing connection")
         break
-        serverSocket.close()
-
+    
+print("Connection closed")
 serverSocket.close()
         
  
 """
 server error codes
-
-501 valid server recieve
 
 700 invalid option
 701 IOError
