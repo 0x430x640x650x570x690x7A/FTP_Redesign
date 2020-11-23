@@ -37,13 +37,13 @@ while True:
         if 'send' in message or 'copy' in message or 'rename' in message  or 'delete' in message :
             #print(message)
             serverSocket.sendall(message.encode())
-            
-            """
-            print("Command Sent")
-            data = serverSocket.recv(1024)
-            tempString = data.decode()
-            print(tempString)
-            """
+            print("Command sent to server")
+            if 'send' in message:
+                print("Received directory list: ")
+                data = serverSocket.recv(1024)
+                tempString = data.decode()
+                print(tempString)
+
         else:
             print("600 Invalid Option")
             
