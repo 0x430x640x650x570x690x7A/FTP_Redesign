@@ -17,14 +17,14 @@ serverSocket.listen(1)
 print('Server up on port', serverPort)
 connectionSocket, addr = serverSocket.accept()     
 print('Connected by', addr)
-myPath = ""
+myPath = "/home/mininet/mininet/custom/serverFolder/"
 
 def send():
     #print('host side send') 
     path = "/home/mininet/mininet/"
     print("File directory list for " + path + inputData[1])
     directoryList = os.listdir(path + inputData[1]);
-    print(directoryList)
+    #print(directoryList)
     temp = ''
     for i in range(0, len(directoryList)):
         temp += (directoryList[i] + "\n")                         
@@ -56,7 +56,6 @@ def delete():
 
 while True: 
     message = "" 
-    myPath = "/home/mininet/mininet/custom/serverFolder/"
     try:         
         message = connectionSocket.recv(1024)
         #print(message)
@@ -97,8 +96,8 @@ while True:
         break
     except:
         print("704 Error")
-        print("Closing connection")
-        break
+        #print("Closing connection")
+        #break
     
 print("Connection closed")
 serverSocket.close()
@@ -114,22 +113,3 @@ server error codes
 704 general error
 
 """
-
-"""
-import socket
-
-HOST = '10.0.0.1'  # Standard loopback interface address (localhost)
-PORT = 80        # Port to listen on (non-privileged ports are > 1023)
-
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.bind((HOST, PORT))
-    s.listen(True)
-    conn, addr = s.accept()
-    with conn:
-        print('Connected by', addr)
-        while True:
-            data = conn.recv(1024)
-            if not data:
-                break
-            conn.sendall(data)
-            """
