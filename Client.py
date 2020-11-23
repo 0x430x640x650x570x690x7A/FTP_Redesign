@@ -22,10 +22,10 @@ file = "You have created a file"
 print("\tCommand Options ")
 print("send copy rename delete")
 print("\tCommand Rules")
-print("send nameOfFile path ")
-print("copy nameOfFile path newFileName ")
-print("rename nameOfFile path newFileName ")
-print("delete nameOfFile path ")
+print("send fileDirectory ")
+print("copy nameOfFile newFileName ")
+print("rename nameOfFile newFileName ")
+print("delete nameOfFile ")
 
 while True:
     message = ""
@@ -35,12 +35,15 @@ while True:
             break
         
         if 'send' in message or 'copy' in message or 'rename' in message  or 'delete' in message :
-            print(message)
+            #print(message)
             serverSocket.sendall(message.encode())
             
+            """
             print("Command Sent")
-            #data = serverSocket.recv(1024)
-            #print('Received', repr(data))
+            data = serverSocket.recv(1024)
+            tempString = data.decode()
+            print(tempString)
+            """
         else:
             print("600 Invalid Option")
             
@@ -53,9 +56,9 @@ serverSocket.close()
 """
 client error codes
 
-500 Valid client send
 
 600 Invalid Option
 601 Client Side General Error
+602 client side port error
 
 """
